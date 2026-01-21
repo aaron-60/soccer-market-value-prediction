@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+venv/
+.venv/
+ENV/
+
+# Data (large files)
+data/raw/*.csv
+data/raw/*.zip
+data/processed/*.db
+data/processed/*.csv
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Models
+models/*.joblib
+!models/.gitkeep
+
+# Visualizations (can regenerate)
+visualizations/*.png
+!visualizations/.gitkeep
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Kaggle
+.kaggle/
