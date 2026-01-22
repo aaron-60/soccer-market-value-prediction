@@ -54,7 +54,7 @@ def load_data():
     
     # Define features
     feature_cols = [
-        'age', 'height_cm', 'position_encoded', 'foot_encoded',
+        'age', 'position_encoded',
         'is_top5_league', 'league_tier',
         'total_appearances', 'total_goals', 'total_assists', 'total_minutes',
         'goals_per_90', 'assists_per_90', 'minutes_per_game',
@@ -174,8 +174,8 @@ def plot_results(y_test, y_pred, importance, metrics):
     error_pct = error_pct[(error_pct > -200) & (error_pct < 200)]
     ax.hist(error_pct, bins=50, color=COLORS['success'], edgecolor='white', alpha=0.7)
     ax.axvline(x=0, color='red', linestyle='--', linewidth=2)
-    ax.axvline(x=error_pct.median(), color='blue', linestyle='-', linewidth=2,
-               label=f'Median: {error_pct.median():.1f}%')
+    ax.axvline(x=np.median(error_pct), color='blue', linestyle='-', linewidth=2,
+               label=f'Median: {np.median(error_pct):.1f}%')
     ax.set_xlabel('Prediction Error (%)')
     ax.set_ylabel('Frequency')
     ax.set_title('Error Distribution')

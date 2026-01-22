@@ -2,13 +2,8 @@
 -- SOCCER PLAYER MARKET VALUE - SQL ANALYSIS QUERIES
 -- ============================================================================
 -- Database: data/processed/player_market_value.db
--- Compatible with: SQLite, DBeaver, Power BI, Python sqlite3
 -- ============================================================================
 
-
--- ============================================================================
--- BASIC QUERIES
--- ============================================================================
 
 -- 1. Top 25 Most Valuable Players
 SELECT 
@@ -53,10 +48,6 @@ ORDER BY SUM(p.market_value_in_eur) DESC
 LIMIT 20;
 
 
--- ============================================================================
--- AGE ANALYSIS
--- ============================================================================
-
 -- 4. Market Value by Age Group
 SELECT 
     CASE 
@@ -99,11 +90,6 @@ GROUP BY age
 HAVING player_count >= 30
 ORDER BY age;
 
-
--- ============================================================================
--- LEAGUE ANALYSIS
--- ============================================================================
-
 -- 6. Top Leagues by Total Value
 SELECT 
     c.domestic_competition_id AS league_id,
@@ -142,11 +128,6 @@ WHERE p.market_value_in_eur > 0
 GROUP BY c.domestic_competition_id
 ORDER BY total_billions DESC;
 
-
--- ============================================================================
--- NATIONALITY ANALYSIS
--- ============================================================================
-
 -- 8. Top Nationalities by Total Player Value
 SELECT 
     country_of_citizenship AS nationality,
@@ -160,11 +141,6 @@ GROUP BY country_of_citizenship
 HAVING player_count >= 20
 ORDER BY total_value_billions DESC
 LIMIT 20;
-
-
--- ============================================================================
--- PERFORMANCE ANALYSIS
--- ============================================================================
 
 -- 9. Top Scorers with Market Value
 SELECT 
@@ -216,10 +192,6 @@ ORDER BY goals_per_90 DESC
 LIMIT 25;
 
 
--- ============================================================================
--- VALUATION HISTORY ANALYSIS
--- ============================================================================
-
 -- 11. Market Value Trends by Year
 SELECT 
     strftime('%Y', date) AS year,
@@ -258,11 +230,6 @@ JOIN (
 WHERE first_val.market_value >= 500000  -- Min €500K starting value
 ORDER BY (latest_val.market_value - first_val.market_value) DESC
 LIMIT 25;
-
-
--- ============================================================================
--- COMBINED ANALYSIS QUERIES
--- ============================================================================
 
 -- 13. Value Efficiency: Goals per Million Euro Value
 SELECT 
@@ -332,11 +299,6 @@ WHERE age BETWEEN 18 AND 38
 GROUP BY position, age
 HAVING players >= 10
 ORDER BY position, age;
-
-
--- ============================================================================
--- SUMMARY STATISTICS
--- ============================================================================
 
 -- 16. Dataset Summary
 SELECT 

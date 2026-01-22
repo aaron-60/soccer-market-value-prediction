@@ -1,5 +1,7 @@
 # Soccer Player Market Value Prediction
 # Python Dependencies
+#
+# Install with: python -m pip install -r requirements.txt
 
 pandas>=2.0.0
 numpy>=1.24.0

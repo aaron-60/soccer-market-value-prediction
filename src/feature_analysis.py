@@ -79,15 +79,20 @@ def create_features():
     
     conn = get_connection()
     
-    # Load base player data
+    # First, check what columns exist in the players table
+    cursor = conn.cursor()
+    cursor.execute("PRAGMA table_info(players)")
+    player_columns = [row[1] for row in cursor.fetchall()]
+    print(f"\nAvailable player columns: {len(player_columns)}")
+    
+    # Build query based on available columns
+    # Core columns that should always exist
     query = """
     SELECT 
         p.player_id,
         p.name as player_name,
         p.position,
         p.sub_position,
-        p.foot,
-        p.height_cm,
         p.country_of_citizenship as nationality,
         p.date_of_birth,
         p.current_club_id,
@@ -132,7 +137,7 @@ def create_features():
     """
     
     df = pd.read_sql_query(query, conn)
-    print(f"\nLoaded {len(df):,} players with market values")
+    print(f"Loaded {len(df):,} players with market values")
     
     # === FEATURE ENGINEERING ===
     print("\nEngineering features...")
@@ -171,30 +176,21 @@ def create_features():
     df['minutes_per_game'] = np.where(df['total_appearances'] > 0,
                                        df['total_minutes'] / df['total_appearances'], 0)
     
-    # 6. Foot encoding
-    foot_map = {'right': 0, 'left': 1, 'both': 2}
-    df['foot_encoded'] = df['foot'].str.lower().map(foot_map).fillna(0)
-    
-    # 7. Height (fill missing)
-    df['height_cm'] = df.groupby('position_group')['height_cm'].transform(
-        lambda x: x.fillna(x.median())
-    ).fillna(180)
-    
-    # 8. Club prestige
+    # 6. Club prestige
     df['club_total_value'] = df['club_total_value'].fillna(0)
     df['club_value_rank'] = df['club_total_value'].rank(pct=True)
     
-    # 9. Nationality features
+    # 7. Nationality features
     nationality_avg = df.groupby('nationality')['market_value'].mean()
     df['nationality_avg_value'] = df['nationality'].map(nationality_avg)
     
-    # 10. Club average value
+    # 8. Club average value
     df['club_avg_player_value'] = df.groupby('current_club_id')['market_value'].transform('mean')
     
-    # 11. Log transform
+    # 9. Log transform
     df['log_market_value'] = np.log1p(df['market_value'])
     
-    # 12. Composite scores
+    # 10. Composite scores
     df['productivity_score'] = df['total_goals'] * 3 + df['total_assists'] * 2 + df['total_appearances'] * 0.1
     
     # Filter valid ages
@@ -413,7 +409,7 @@ def analyze_correlations():
     print(f"\nAnalyzing {len(df):,} players (min 10 appearances)\n")
     
     numeric_cols = ['age', 'total_appearances', 'total_goals', 'total_assists',
-                    'goals_per_90', 'assists_per_90', 'height_cm', 'is_top5_league']
+                    'goals_per_90', 'assists_per_90', 'is_top5_league']
     
     correlations = {}
     for col in numeric_cols:

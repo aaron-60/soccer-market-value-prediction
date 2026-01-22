@@ -20,7 +20,7 @@ Analyzes **400,000+ player valuations** to predict market values based on:
 
 ```bash
 # 1. Setup
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 
 # 2. Run pipeline
 python src/data_pipeline.py      # Download & load data

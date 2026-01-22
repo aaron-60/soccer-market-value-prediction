@@ -264,7 +264,7 @@ def plot_value_distribution():
     """Plot value distribution."""
     df = pd.read_csv(PROCESSED_DATA_PATH / 'player_features.csv')
     
-    fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+    fig, axes = plt.subplots(1, 2, figsize=(14, 6))
     
     # Log histogram
     log_values = np.log10(df['market_value'][df['market_value'] > 0])
@@ -277,7 +277,7 @@ def plot_value_distribution():
         axes[0].axvline(x=val, color='red', linestyle='--', alpha=0.5)
         axes[0].text(val, axes[0].get_ylim()[1]*0.9, label, rotation=90, va='top', ha='right')
     
-    # Pie chart
+    # Pie chart with legend instead of labels
     brackets = [
         ('< €1M', df['market_value'] < 1000000),
         ('€1M - €5M', (df['market_value'] >= 1000000) & (df['market_value'] < 5000000)),
@@ -290,9 +290,24 @@ def plot_value_distribution():
     counts = [b[1].sum() for b in brackets]
     colors_pie = plt.cm.Blues(np.linspace(0.3, 0.9, len(brackets)))
     
-    axes[1].pie(counts, labels=labels, autopct='%1.1f%%', colors=colors_pie, startangle=90)
+    # Use legend instead of labels on pie to avoid overlap
+    wedges, texts, autotexts = axes[1].pie(
+        counts, 
+        autopct='%1.1f%%', 
+        colors=colors_pie, 
+        startangle=90,
+        pctdistance=0.6
+    )
+    
+    # Make percentage text more readable
+    for autotext in autotexts:
+        autotext.set_fontsize(9)
+    
+    # Add legend on the side
+    axes[1].legend(wedges, labels, title="Value Bracket", loc="center left", bbox_to_anchor=(1, 0.5))
     axes[1].set_title('Players by Value Bracket')
     
+    plt.tight_layout()
     save_plot('06_value_distribution')
 
 
