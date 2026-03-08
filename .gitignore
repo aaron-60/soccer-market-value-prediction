@@ -23,8 +23,6 @@ visualizations/*.png
 !visualizations/.gitkeep
 
 # Power BI
-*.pbix
-powerbi/data/*.csv
 **/localSettings.json
 **/editorSettings.json
 **/.pbi/cache.abf
