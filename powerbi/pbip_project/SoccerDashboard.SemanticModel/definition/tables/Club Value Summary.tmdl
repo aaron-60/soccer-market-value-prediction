@@ -1,0 +1,27 @@
+table 'Club Value Summary'
+	lineageTag: 3bb4b7b5-e87c-42ba-9274-c91ee30e7c68
+
+	column current_club_name
+		lineageTag: 0ad82ed0-bb33-497c-97d0-4ec9e030f39b
+		isNameInferred
+		sourceColumn: Players[current_club_name]
+
+	column 'Total Value'
+		lineageTag: a0f5c4ec-2b7a-44e9-8d93-0c6b3f7cf363
+		isNameInferred
+		sourceColumn: [Total Value]
+
+	column 'Player Count'
+		lineageTag: 2710dfff-d564-4a66-8b80-b8ae9b6a051d
+		isNameInferred
+		sourceColumn: [Player Count]
+
+	column 'Avg Player Value'
+		lineageTag: 833160d8-f721-4459-8466-38eda061ad6d
+		isNameInferred
+		sourceColumn: [Avg Player Value]
+
+	partition 'Club Value Summary' = calculated
+		mode: import
+		source = TOPN(20, SUMMARIZE(Players, Players[current_club_name], "Total Value", SUM(Players[market_value]), "Player Count", COUNTROWS(Players), "Avg Player Value", AVERAGE(Players[market_value])), [Total Value], DESC)
+

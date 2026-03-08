@@ -1,0 +1,51 @@
+table 'Top Players'
+	lineageTag: f0be153a-61ba-46a0-a14d-4bd56246ce30
+
+	column 'Player Name'
+		lineageTag: bb4ca901-3df3-4e0f-acd2-1dd35e84587a
+		isNameInferred
+		sourceColumn: [Player Name]
+
+	column Club
+		lineageTag: ff27ef5e-b3e6-4be8-9148-2e03289f826b
+		isNameInferred
+		sourceColumn: [Club]
+
+	column Age
+		lineageTag: 653ae2b8-0c03-4b03-8505-8087db9dbd02
+		isNameInferred
+		sourceColumn: [Age]
+
+	column Position
+		lineageTag: 60abdf18-799a-40d1-9e6a-f3f9895c3508
+		isNameInferred
+		sourceColumn: [Position]
+
+	column 'Sub Position'
+		lineageTag: dbbe1f87-f360-455f-b447-cfd19aaa5d2f
+		isNameInferred
+		sourceColumn: [Sub Position]
+
+	column Nationality
+		lineageTag: 504d3ffa-2420-4f76-83cb-793c0e8ef908
+		isNameInferred
+		sourceColumn: [Nationality]
+
+	column 'Market Value'
+		dataType: double
+		formatString: €#,##0.0,,"M"
+		lineageTag: 59d79e89-e380-414d-8b80-e89bc8289e15
+		isNameInferred
+		sourceColumn: [Market Value]
+
+	column 'Peak Market Value'
+		dataType: double
+		formatString: €#,##0.0,,"M"
+		lineageTag: 5b9ba7c4-faca-4eae-8565-bba6a3f7c545
+		isNameInferred
+		sourceColumn: [Peak Market Value]
+
+	partition 'Top Players' = calculated
+		mode: import
+		source = TOPN(50, SELECTCOLUMNS(Players, "Player Name", Players[player_name], "Club", Players[current_club_name], "Age", Players[age], "Position", Players[position], "Sub Position", Players[sub_position], "Nationality", Players[nationality], "Market Value", Players[market_value], "Peak Market Value", Players[peak_market_value]), [Market Value], DESC)
+

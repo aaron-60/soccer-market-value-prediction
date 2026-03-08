@@ -1,0 +1,180 @@
+/// Main fact table - 31K players with demographics and market values
+table Players
+	lineageTag: d6ae10a3-9de5-40e6-b683-3e384916f1a5
+
+	measure 'Total Players' = COUNTROWS(Players)
+		formatString: #,##0
+		displayFolder: KPIs
+		lineageTag: d8c95c4b-14e6-4685-ae33-b8412744eb97
+
+	measure 'Total Market Value' = SUM(Players[market_value])
+		formatString: €#,##0,,"M"
+		displayFolder: KPIs
+		lineageTag: 8e7b2a6d-e77d-4306-9b32-1d1649b560b5
+
+	measure 'Avg Market Value' = AVERAGE(Players[market_value])
+		formatString: €#,##0
+		displayFolder: KPIs
+		lineageTag: b449fc30-8f7d-4dff-a73e-c8107e844472
+
+	measure 'Avg Age' = AVERAGE(Players[age])
+		formatString: 0.0
+		displayFolder: KPIs
+		lineageTag: 6f0a3067-1960-446f-b4d4-4a8cc272f651
+
+	measure 'Player Count by Country' = COUNTROWS(Players)
+		formatString: #,##0
+		displayFolder: Map
+		lineageTag: a57e4a7a-1583-4f12-b563-9dcc0afbbdf3
+
+	measure 'Total Value by Country' = SUM(Players[market_value])
+		formatString: €#,##0,,"M"
+		displayFolder: Map
+		lineageTag: e511ec6b-92ca-4ec8-96cd-32f5cb017f30
+
+	measure 'Top Player Value' = MAX(Players[market_value])
+		formatString: €#,##0
+		displayFolder: KPIs
+		lineageTag: 44ef739b-0720-4a25-baef-8c6fe1217caa
+
+	measure 'Forwards Count' = CALCULATE(COUNTROWS(Players), Players[position] = "Attack")
+		formatString: #,##0
+		displayFolder: Position Breakdown
+		lineageTag: dae0621b-25a6-4532-8c8e-fddcfbc879f7
+
+	measure 'Midfielders Count' = CALCULATE(COUNTROWS(Players), Players[position] = "Midfield")
+		formatString: #,##0
+		displayFolder: Position Breakdown
+		lineageTag: b90b82fb-e4ec-42eb-93ed-70d734bb0e45
+
+	measure 'Defenders Count' = CALCULATE(COUNTROWS(Players), Players[position] = "Defense")
+		formatString: #,##0
+		displayFolder: Position Breakdown
+		lineageTag: a3148dfc-9c1d-4c58-a84c-af712aed8eea
+
+	measure 'Goalkeepers Count' = CALCULATE(COUNTROWS(Players), Players[position] = "Goalkeeper")
+		formatString: #,##0
+		displayFolder: Position Breakdown
+		lineageTag: 8b6f404b-e764-4c1f-b4c8-e2c22335ffc8
+
+	column player_id
+		dataType: int64
+		lineageTag: 761625c0-8f81-4708-a098-d28efc79ad73
+		summarizeBy: none
+		sourceColumn: player_id
+
+	column player_name
+		dataType: string
+		lineageTag: af1f921e-1657-4ffd-80ed-ff61ab6e225a
+		summarizeBy: none
+		sourceColumn: player_name
+
+	column position
+		dataType: string
+		lineageTag: 7a293319-399f-4d2b-9d28-1a9984eac362
+		summarizeBy: none
+		sourceColumn: position
+
+	column sub_position
+		dataType: string
+		lineageTag: 8c7c1729-eab5-4537-b254-1b216eda4519
+		summarizeBy: none
+		sourceColumn: sub_position
+
+	column nationality
+		dataType: string
+		lineageTag: 8ce614a5-6e54-476a-a6e7-dee85df1746f
+		dataCategory: Country
+		summarizeBy: none
+		sourceColumn: nationality
+
+	column date_of_birth
+		dataType: dateTime
+		lineageTag: ddcb8940-cfb2-4846-8512-321595dab82e
+		summarizeBy: none
+		sourceColumn: date_of_birth
+
+	column age
+		dataType: int64
+		lineageTag: 44dac26a-75bb-43a5-9d39-8f16a0fab543
+		summarizeBy: sum
+		sourceColumn: age
+
+	column current_club_id
+		dataType: int64
+		lineageTag: 23b74e93-fdac-410a-8efe-e689484c4dd2
+		summarizeBy: none
+		sourceColumn: current_club_id
+
+	column current_club_name
+		dataType: string
+		lineageTag: 0cae8d2b-781a-4c21-96a1-750121b2ee17
+		summarizeBy: none
+		sourceColumn: current_club_name
+
+	column league_id
+		dataType: string
+		lineageTag: e789d49a-2714-43f6-a58d-1d8f8f7bed86
+		summarizeBy: none
+		sourceColumn: league_id
+
+	column market_value
+		dataType: double
+		formatString: €#,##0
+		displayFolder: Values
+		lineageTag: 9fba2258-81d4-4896-8785-9b9934d5d1a1
+		summarizeBy: sum
+		sourceColumn: market_value
+
+	column peak_market_value
+		dataType: double
+		formatString: €#,##0
+		displayFolder: Values
+		lineageTag: c91404fc-c32a-493d-a886-13075a8e59dc
+		summarizeBy: sum
+		sourceColumn: peak_market_value
+
+	column league_tier
+		dataType: string
+		lineageTag: 01336086-0a41-4882-b4e0-6198c7f3bc66
+		summarizeBy: none
+		sourceColumn: league_tier
+
+	column age_group
+		dataType: string
+		lineageTag: 495d704b-5131-4bb4-a27b-0dc37ddb2541
+		summarizeBy: none
+		sourceColumn: age_group
+
+	hierarchy 'Position Hierarchy'
+		lineageTag: 606ccd6c-8e5e-4ecd-ba07-a7a96df0ae1a
+
+		level Position
+			lineageTag: 4e75cc8d-405f-41c4-a99c-6f6a6e83a00a
+			column: position
+
+		level 'Sub Position'
+			lineageTag: 6fb477ba-dadd-497b-b925-83ad4b65b286
+			column: sub_position
+
+	hierarchy 'Age Hierarchy'
+		lineageTag: ca69a065-2858-409a-bf91-396cc473841a
+
+		level 'Age Group'
+			lineageTag: 51465329-5724-43a9-b1de-16f621302db0
+			column: age_group
+
+		level Age
+			lineageTag: 1eaa2cfc-b3d1-4f61-8d66-03f7725d8aef
+			column: age
+
+	partition Players = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\\Users\\aaron\\Desktop\\soccer-market-value-prediction\\data\\processed\\powerbi\\players.csv"), [Delimiter=",", Columns=14, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    ChangedTypes = Table.TransformColumnTypes(PromotedHeaders, {{"player_id", Int64.Type}, {"player_name", type text}, {"position", type text}, {"sub_position", type text}, {"nationality", type text}, {"date_of_birth", type datetime}, {"age", Int64.Type}, {"current_club_id", Int64.Type}, {"current_club_name", type text}, {"league_id", type text}, {"market_value", type number}, {"peak_market_value", type number}, {"league_tier", type text}, {"age_group", type text}})
+				in
+				    ChangedTypes
+

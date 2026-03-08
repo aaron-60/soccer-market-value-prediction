@@ -1,0 +1,32 @@
+table 'Country Summary'
+	lineageTag: 1f39f781-317c-4c76-ab14-4e8b95686a8b
+
+	column nationality
+		lineageTag: cb09a857-859b-4a65-a8ba-c496d1bcc873
+		isNameInferred
+		sourceColumn: Players[nationality]
+
+	column 'Player Count'
+		lineageTag: 44835808-ed03-4802-a815-5f92a02f29d1
+		isNameInferred
+		sourceColumn: [Player Count]
+
+	column 'Total Market Value'
+		lineageTag: d7524d09-6665-469f-9ea7-1d6a089aadba
+		isNameInferred
+		sourceColumn: [Total Market Value]
+
+	column 'Avg Market Value'
+		lineageTag: 748a98d9-e971-4d8a-a825-252db928b232
+		isNameInferred
+		sourceColumn: [Avg Market Value]
+
+	column 'Top Player Value'
+		lineageTag: a6722362-f221-48dd-add8-3affc0967317
+		isNameInferred
+		sourceColumn: [Top Player Value]
+
+	partition 'Country Summary' = calculated
+		mode: import
+		source = SUMMARIZE(Players, Players[nationality], "Player Count", COUNTROWS(Players), "Total Market Value", SUM(Players[market_value]), "Avg Market Value", AVERAGE(Players[market_value]), "Top Player Value", MAX(Players[market_value]))
+

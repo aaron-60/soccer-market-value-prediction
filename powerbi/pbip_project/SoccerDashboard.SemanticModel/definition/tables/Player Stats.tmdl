@@ -1,0 +1,92 @@
+/// Career performance statistics
+table 'Player Stats'
+	lineageTag: 399cf6a3-bd18-4399-94c9-e2c7c8ec834f
+
+	measure 'Total Goals' = SUM('Player Stats'[total_goals])
+		formatString: #,##0
+		displayFolder: Performance
+		lineageTag: c4d84efc-ce93-4c24-a35b-8d5081ca97ef
+
+	measure 'Total Assists' = SUM('Player Stats'[total_assists])
+		formatString: #,##0
+		displayFolder: Performance
+		lineageTag: dabc4c6f-3774-4ed7-a03c-1af4ee5668bf
+
+	measure 'Total Appearances' = SUM('Player Stats'[total_appearances])
+		formatString: #,##0
+		displayFolder: Performance
+		lineageTag: 719e63cd-ec27-4031-9f6e-d588e7221def
+
+	measure 'Avg Goals per 90' = AVERAGE('Player Stats'[goals_per_90])
+		formatString: 0.00
+		displayFolder: Performance
+		lineageTag: a0022cb6-a568-49df-9f9c-0146a88e5b46
+
+	column player_id
+		dataType: int64
+		lineageTag: 27a56235-f37e-4509-bdae-6fec2cbcf43d
+		summarizeBy: none
+		sourceColumn: player_id
+
+	column total_appearances
+		dataType: int64
+		lineageTag: 5eb92ccc-cbce-4d31-af49-fd75e54995ff
+		summarizeBy: sum
+		sourceColumn: total_appearances
+
+	column total_goals
+		dataType: int64
+		lineageTag: dd0bc987-1279-4694-afe4-8c4e45f26627
+		summarizeBy: sum
+		sourceColumn: total_goals
+
+	column total_assists
+		dataType: int64
+		lineageTag: 5f75df12-830d-4ceb-9a08-b1ab61df0da8
+		summarizeBy: sum
+		sourceColumn: total_assists
+
+	column total_minutes
+		dataType: int64
+		lineageTag: d4bb6d10-e445-49ea-8d9e-ca802b515d6a
+		summarizeBy: sum
+		sourceColumn: total_minutes
+
+	column total_yellow_cards
+		dataType: int64
+		lineageTag: 1a964ed0-dc71-4438-98f9-6ff3e2681e32
+		summarizeBy: sum
+		sourceColumn: total_yellow_cards
+
+	column total_red_cards
+		dataType: int64
+		lineageTag: d80357f3-c1c9-4a60-b007-c46e79004cb1
+		summarizeBy: sum
+		sourceColumn: total_red_cards
+
+	column goals_per_90
+		dataType: double
+		lineageTag: 52372180-de9c-4cba-b45d-419153c5fc56
+		summarizeBy: sum
+		sourceColumn: goals_per_90
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column assists_per_90
+		dataType: double
+		lineageTag: 906b2378-953e-4320-8d21-004e3a6ad881
+		summarizeBy: sum
+		sourceColumn: assists_per_90
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition 'Player Stats' = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\\Users\\aaron\\Desktop\\soccer-market-value-prediction\\data\\processed\\powerbi\\player_stats.csv"), [Delimiter=",", Columns=9, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    ChangedTypes = Table.TransformColumnTypes(PromotedHeaders, {{"player_id", Int64.Type}, {"total_appearances", Int64.Type}, {"total_goals", Int64.Type}, {"total_assists", Int64.Type}, {"total_minutes", Int64.Type}, {"total_yellow_cards", Int64.Type}, {"total_red_cards", Int64.Type}, {"goals_per_90", type number}, {"assists_per_90", type number}})
+				in
+				    ChangedTypes
+

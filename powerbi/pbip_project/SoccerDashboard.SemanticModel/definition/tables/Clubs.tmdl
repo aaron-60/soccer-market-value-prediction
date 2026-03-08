@@ -1,0 +1,80 @@
+/// Club dimension table
+table Clubs
+	lineageTag: 2b529414-fec7-4fa4-a74c-7b157a13ce7f
+
+	measure 'Market Value by Club' = CALCULATE(SUM(Players[market_value]))
+		formatString: €#,##0,,"M"
+		displayFolder: Club Analysis
+		lineageTag: 630e5434-afaa-4c15-b894-2fc48b6fcf29
+
+	measure 'Squad Size' = CALCULATE(COUNTROWS(Players))
+		formatString: #,##0
+		displayFolder: Club Analysis
+		lineageTag: 41edbdb8-abfd-45d8-8549-ae9b7ab6dd96
+
+	column club_id
+		dataType: int64
+		lineageTag: f098c1f0-7b54-4de2-aa84-b41de4db6cc1
+		summarizeBy: none
+		sourceColumn: club_id
+
+	column club_name
+		dataType: string
+		lineageTag: 0cca539f-10c5-4912-961d-79e65602faa4
+		summarizeBy: none
+		sourceColumn: club_name
+
+	column league_id
+		dataType: string
+		lineageTag: a4128870-79a9-4eae-85d1-8d92d86782e5
+		summarizeBy: none
+		sourceColumn: league_id
+
+	column club_total_value
+		dataType: double
+		lineageTag: 8f9ddf2c-ac05-4cb6-b10b-c57ca383c36d
+		summarizeBy: none
+		sourceColumn: club_total_value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column squad_size
+		dataType: int64
+		lineageTag: 4e23d11c-517d-4a06-908c-6e97cb66f22f
+		summarizeBy: sum
+		sourceColumn: squad_size
+
+	column club_avg_age
+		dataType: double
+		lineageTag: 899f7597-d0dc-4c3b-abc9-e55dd0b40c96
+		summarizeBy: none
+		sourceColumn: club_avg_age
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column stadium_name
+		dataType: string
+		lineageTag: 803f2080-3b8f-4234-b8f7-c8f8ff1f1363
+		summarizeBy: none
+		sourceColumn: stadium_name
+
+	column stadium_seats
+		dataType: int64
+		lineageTag: 38e9dd66-fb95-4631-9cba-363d99882020
+		summarizeBy: sum
+		sourceColumn: stadium_seats
+
+	partition Clubs = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\\Users\\aaron\\Desktop\\soccer-market-value-prediction\\data\\processed\\powerbi\\clubs.csv"), [Delimiter=",", Columns=8, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    ChangedTypes = Table.TransformColumnTypes(PromotedHeaders, {{"club_id", Int64.Type}, {"club_name", type text}, {"league_id", type text}, {"club_total_value", type number}, {"squad_size", Int64.Type}, {"club_avg_age", type number}, {"stadium_name", type text}, {"stadium_seats", Int64.Type}})
+				in
+				    ChangedTypes
+

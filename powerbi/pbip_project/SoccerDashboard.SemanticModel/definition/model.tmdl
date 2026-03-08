@@ -1,0 +1,25 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-CA
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["MCP-PBIModeling","DevMode"]
+
+annotation PBI_QueryOrder = ["Players","Player Stats","Clubs","Leagues","Predictions"]
+
+ref table Players
+ref table 'Player Stats'
+ref table Clubs
+ref table Leagues
+ref table Predictions
+ref table 'Country Summary'
+ref table 'Top Players'
+ref table 'Club Value Summary'
+
+ref cultureInfo en-US
+

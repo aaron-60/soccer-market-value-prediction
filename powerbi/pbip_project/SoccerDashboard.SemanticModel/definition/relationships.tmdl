@@ -1,0 +1,15 @@
+relationship Players_current_club_id_Clubs_club_id
+	crossFilteringBehavior: bothDirections
+	fromColumn: Players.current_club_id
+	toColumn: Clubs.club_id
+
+relationship Players_league_id_Leagues_league_id
+	crossFilteringBehavior: bothDirections
+	fromColumn: Players.league_id
+	toColumn: Leagues.league_id
+
+relationship 'Player Stats_player_id_Players_player_id'
+	crossFilteringBehavior: bothDirections
+	fromColumn: 'Player Stats'.player_id
+	toColumn: Players.player_id
+

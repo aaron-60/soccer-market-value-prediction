@@ -1,0 +1,81 @@
+/// ML model predictions vs actual values
+table Predictions
+	lineageTag: a8c8d9ff-18f3-4854-8dd1-0b87e710e345
+
+	measure 'Prediction Accuracy' = 1 - AVERAGEX(Predictions, ABS(Predictions[error_pct]))
+		formatString: 0.0%
+		displayFolder: ML Predictions
+		lineageTag: e145cf92-96ca-4b2d-bd09-d206b7c1d95d
+
+	measure 'Avg Prediction Error' = AVERAGE(Predictions[error_pct])
+		formatString: 0.00%
+		displayFolder: ML Predictions
+		lineageTag: 324646ef-cb7e-448e-aad3-86fef3b4e61b
+
+	measure 'Total Predicted Value' = SUM(Predictions[predicted])
+		formatString: €#,##0,,"M"
+		displayFolder: ML Predictions
+		lineageTag: de22b52a-56ca-4b04-9432-9a5d20ce244b
+
+	column player_name
+		dataType: string
+		lineageTag: 69f81e99-ffe4-4201-ac2b-f01301901c1d
+		summarizeBy: none
+		sourceColumn: player_name
+
+	column age
+		dataType: int64
+		lineageTag: 88aa102e-3307-43f1-b77c-8fbc633a57a9
+		summarizeBy: sum
+		sourceColumn: age
+
+	column position_group
+		dataType: string
+		lineageTag: ae4b7fa7-afb5-4d89-82d4-84608cd5ae79
+		summarizeBy: none
+		sourceColumn: position_group
+
+	column current_club_name
+		dataType: string
+		lineageTag: 1e850fd1-2ddd-40f8-b9cd-68841c897437
+		summarizeBy: none
+		sourceColumn: current_club_name
+
+	column market_value
+		dataType: double
+		formatString: €#,##0
+		lineageTag: f4930b66-14ab-4c25-b366-f0b1ea0e1f86
+		summarizeBy: sum
+		sourceColumn: market_value
+
+	column predicted
+		dataType: double
+		formatString: €#,##0
+		lineageTag: 8aaf11a8-4beb-4e60-b399-c488e13d94aa
+		summarizeBy: sum
+		sourceColumn: predicted
+
+	column error
+		dataType: double
+		formatString: €#,##0
+		lineageTag: 28883f3b-da32-43a0-99db-4e72ae571a7a
+		summarizeBy: sum
+		sourceColumn: error
+
+	column error_pct
+		dataType: double
+		formatString: 0.00%
+		lineageTag: 047f5db6-050d-4488-af17-4e7c039d0302
+		summarizeBy: sum
+		sourceColumn: error_pct
+
+	partition Predictions = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\\Users\\aaron\\Desktop\\soccer-market-value-prediction\\data\\processed\\powerbi\\predictions.csv"), [Delimiter=",", Columns=8, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    ChangedTypes = Table.TransformColumnTypes(PromotedHeaders, {{"player_name", type text}, {"age", Int64.Type}, {"position_group", type text}, {"current_club_name", type text}, {"market_value", type number}, {"predicted", type number}, {"error", type number}, {"error_pct", type number}})
+				in
+				    ChangedTypes
+

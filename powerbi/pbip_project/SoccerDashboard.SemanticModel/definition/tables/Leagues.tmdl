@@ -1,0 +1,38 @@
+/// League/competition dimension table
+table Leagues
+	lineageTag: 6cdfa6d4-9286-4365-b32d-dfd9f71cc685
+
+	column league_id
+		dataType: string
+		lineageTag: 2a49aaef-0aa2-47bc-aa26-b22c5253c8d6
+		summarizeBy: none
+		sourceColumn: league_id
+
+	column league_name
+		dataType: string
+		lineageTag: ed5632eb-7fbc-4fa0-a69e-c2b7d0daf39d
+		summarizeBy: none
+		sourceColumn: league_name
+
+	column country_name
+		dataType: string
+		lineageTag: 37197ced-2a68-426f-8922-3fe770ed6628
+		summarizeBy: none
+		sourceColumn: country_name
+
+	column competition_type
+		dataType: string
+		lineageTag: 1610de9c-ad84-473e-a392-cfa2ff2e541f
+		summarizeBy: none
+		sourceColumn: competition_type
+
+	partition Leagues = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\\Users\\aaron\\Desktop\\soccer-market-value-prediction\\data\\processed\\powerbi\\leagues.csv"), [Delimiter=",", Columns=4, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    PromotedHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    ChangedTypes = Table.TransformColumnTypes(PromotedHeaders, {{"league_id", type text}, {"league_name", type text}, {"country_name", type text}, {"competition_type", type text}})
+				in
+				    ChangedTypes
+
